@@ -1,0 +1,112 @@
+{% load static %}
+
+<html>
+<head>
+    <title>Liste des conférenciers</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <!--NavBar start-->
+    {% include 'navBar.html' %}
+    <!-- CONTENT -->
+    <section class="dashboard">
+        <div class="top">
+            <ion-icon class="navToggle" name="menu-outline"></ion-icon>
+            
+            <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="container" style="position: relative; margin-top: 30px;">
+            <div class="overview" style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="title" style="display: flex; align-items: center;">
+                    <ion-icon name="people"></ion-icon>
+                    <span class="text" style="margin-left: 10px;">Liste des conférenciers</span>
+                </div>
+                <div style="display:flex;align-items:center;">
+                    <a href="addConferencier/" class="btn btn-success rounded-circle" style="font-size:24px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">
+                        <ion-icon name="add-circle-outline"></ion-icon>
+                    </a>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom de conférencier</th>
+                        <th scope="col">Prénom de conférencier</th>
+                        <th scope="col">Adresse Email</th>
+                        <th scope="col">Numéro de téléphone</th>
+                        <th scope="col">Image</th>
+                        <th scope="col" style="position: relative;left: 30px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in page_obj %}
+                        <tr>
+                            <th scope="row">{{c.id}}</th>
+                            <td>{{c.nom}}</td>
+                            <td>{{c.prenom}}</td>
+                            <td>{{c.email}}</td>
+                            <td>{{c.telephone}}</td>
+                            <td><img src="/{{c.image}}" target="_blank" width="60px" height="60px" class="rounded-circle"></td>
+                            <td><a href="update_conferencier/{{c.id}}" class="btn btn-warning mb-2"><ion-icon name="create-sharp"></ion-icon></a></td>
+                            <td>
+                                <a href="del_conferencier/{{ c.id }}" class="btn btn-danger mb-2" onclick="event.preventDefault(); sweetAlertConfirm(this.href);">
+                                    <ion-icon name="trash-sharp"></ion-icon>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- pagination -->
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1"><button class="btn btn-secondary">&laquo;</button></a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <button class="btn btn-outline-secondary">{{ num }}</button>
+            {% else %}
+                <a href="?page={{ num }}"><button class="btn btn-outline-secondary">{{ num }}</button></a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.paginator.num_pages }}"><button class="btn btn-secondary">&raquo;</button></a>
+        {% endif %}
+    </span>
+</div>
+
+
+            
+            
+        </div>
+        
+    </section>
+    <script>
+        const navBar = document.querySelector("nav")
+const navToggle = document.querySelector(".navToggle")
+navToggle.addEventListener('click',()=>{
+    navBar.classList.toggle('close')
+})
+
+    </script>
+     </script>
+     {% for message in messages %}
+     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+     {% if message.tags == 'success' %}
+     <script>
+     Swal.fire(
+     'Félicitations',
+     '{{message}}',
+     'success'
+     )
+     </script>
+     {% endif %}
+    {% endfor %}
+</body>
+</html>

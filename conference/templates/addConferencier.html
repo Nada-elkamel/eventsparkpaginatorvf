@@ -1,0 +1,107 @@
+<html>
+    {% load static %}
+
+    <head>
+        <title> Ajouter un conférencier</title>
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+
+    <body>
+        <!--NavBar start-->
+        {% include 'navBar.html' %}
+
+        <!-- CONTENT -->
+        <section class="dashboard">
+            <div class="top">
+                <ion-icon class="navToggle" name="menu-outline"></ion-icon>
+                {% if user.is_authenticated %}
+                {{user.username}} 
+                {% endif %}
+                <ion-icon name="person"></ion-icon>
+            </div>
+
+            <div class="container">
+                <div class="title" style="display: flex; align-items: center;">
+                    <ion-icon name="add"></ion-icon>
+                    <span class="text" style="margin-left: 10px;">Ajouter un conférencier</span>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form action="add_conferencier/" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nom">Nom</label>
+                                <input type="text" class="form-control" id="nom" name="nom">
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="prenom">Prénom</label>
+                                <input type="text" class="form-control" id="prenom" name="prenom">
+                            </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="telephone">Téléphone</label>
+                                <input type="tel" class="form-control" id="telephone" name="telephone">
+                            </div>
+                            </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="bio">Biographie</label>
+                                <textarea class="form-control" id="bio" name="bio" rows="3"></textarea>
+                            </div>
+                            <!-- <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" class="form-control-file" id="image" name="image">
+                            </div> -->
+                            <div class="form-group">
+                                <label for="image">Image </label>
+                                <div class="custom-file">
+                                  <input type="file" class="custom-file-input" id="image" name="image">
+                                  <label class="custom-file-label" for="image">Choisir un fichier</label>
+                                </div>
+                              </div>
+                            <button type="submit" class="btn " style="background-color: #6a2c70; border-color: #6a2c70; color: white; margin-left: 300px;">Ajouter</button>
+                        </form>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </section>
+        <script>
+            const navBar = document.querySelector("nav")
+const navToggle = document.querySelector(".navToggle")
+navToggle.addEventListener('click',()=>{
+    navBar.classList.toggle('close')
+})
+
+        </script>
+         </script>
+         {% for message in messages %}
+         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+         {% if message.tags == 'error' %}
+         <script>
+           Swal.fire(
+           'Echéc',
+           '{{message}}',
+           'error'
+           )
+           </script>
+         {% endif %}
+        {% endfor %}
+    </body>
+</html>

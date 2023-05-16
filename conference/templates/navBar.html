@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+
+<head>
+  <title>Home</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">   
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+
+
+  <link rel="stylesheet" href="{% static 'css/style22.css' %}">
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js"></script>
+  
+
+  
+</head>
+
+<body>
+    <nav>
+        <div class="logo">
+            <div class="logo-image" width="90px" height="90px" >
+            </div>
+            <div class="logo-name">
+               Event spark
+            </div>
+        </div>
+
+        <div class="menu-items">
+            <ul class="navLinks">
+                <li class="navList ">
+                    <a href="{% url 'dashboard' %}">
+                        <ion-icon name="home-outline"></ion-icon>
+                        <span class="links">Tableau de bord</span>
+                    </a>
+                </li>
+                <li class="navList">
+                    <a href="{% url 'conference' %}">
+                        <ion-icon name="folder-outline"></ion-icon>
+                        <span class="links">Conférences</span>
+                    </a>
+                </li>
+                <li class="navList">
+                    <a href="{% url 'conferencier' %}">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span class="links">Conférenciers</span>
+                    </a>
+                </li>
+                
+            </ul>
+            <ul class="bottom-link">
+                <li>
+                    <a href="{% url 'logout' %}">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                        <span class="links">Se déconnecter</span>
+                    </a>
+                </li>
+              
+            </ul>
+        </div>
+    </nav>
+
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>

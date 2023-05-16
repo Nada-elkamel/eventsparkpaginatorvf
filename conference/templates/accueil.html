@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Accueil</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+    <link rel="stylesheet" href="{% static 'css/normalize.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/eventspark.css' %}" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Start Header -->
+    <div class="header" id="header">
+      <div class="container">
+        <a href="{% url 'accueil' %}" class="logo">EVENT SPARK</a>
+        <ul class="main-nav">
+            <li><a href="#conferences">Conférences</a></li>
+          <li><a href="{% url 'login' %}">Connexion</a></li>
+          
+        </ul>
+      </div>
+    </div>
+    <!-- End Header -->
+    <!-- Start Landing -->
+    <div class="landing">
+      <div class="container">
+        <div class="text">
+          <h1>Bienvenue, à event spark </h1>
+          <p>Notre site est conçu pour vous fournir toutes les informations dont vous avez besoin pour vous inscrire à nos événements</p>
+        </div>
+        <div class="image">
+          <img src="{% static 'image/landing-image.png' %}" alt="" />
+        </div>
+      </div>
+     
+    </div>
+    <!-- End Landing -->
+     <!-- Start Articles -->
+    <div class="articles" id="conferences">
+        <h2 class="main-title">Conférences</h2>
+        <div class="container">
+            {% for conference in conferences %}
+          <div class="box">
+            <img src="/{{conference.imageConf}}" alt="" />
+            <div class="content">
+              <h3>{{conference.nom}}</h3>
+              <p>{{conference.topic}}</p>
+            </div>
+            <div class="info">
+              <a href="detailsConference/{{ conference.id }}">voir plus</a>
+              <i class="fas fa-long-arrow-alt-right"></i>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="spikes"></div>
+      <!-- End Articles -->
+    <!-- Start Footer -->
+    <div class="footer">
+      <div class="container">
+        <div class="box">
+          <h3>EVENT SPARK</h3>
+          
+          <p class="text">
+            Ne manquez pas l'opportunité de vous enrichir de nouvelles idées et de rencontrer des professionnels passionnés. Rejoignez-nous à nos conférence et participez à une expérience inoubliable !
+          </p>
+        </div>
+       
+        <div class="box">
+          <div class="line">
+            <i class="fas fa-map-marker-alt fa-fw"></i>
+            <div class="info">Nabeul , Mrezga 8080</div>
+          </div>
+          <div class="line">
+            <i class="far fa-clock fa-fw"></i>
+            <div class="info">Heures de travail: De 10:00 à 18:00</div>
+          </div>
+          <div class="line">
+            <i class="fas fa-phone-volume fa-fw"></i>
+            <div class="info">
+              <span>+216 26 155 654</span>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      <p class="copyright">Tous droits réservés &copy; 2023 EVENT SPARK</p>
+    </div>
+    <!-- End Footer -->
+  </body>
+</html>

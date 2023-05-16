@@ -1,0 +1,161 @@
+{% load static %}
+
+<html>
+<head>
+    <title>Editer une conférence</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <!--NavBar start-->
+    {% include 'navBar.html' %}
+    <!-- CONTENT -->
+    <section class="dashboard">
+        <div class="top">
+            <ion-icon class="navToggle" name="menu-outline"></ion-icon>
+            
+            {% if user.is_authenticated %}
+                {{user.username}} 
+                {% endif %}
+            <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="container" style="position: relative; margin-top: 30px;">
+            <div class="overview" style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="title" style="display: flex; align-items: center;">
+                    <ion-icon name="calendar"></ion-icon>
+                    <span class="text" style="margin-left: 10px;">Editer une conférence</span>
+                </div>
+                {% for message in messages %}
+            {% if message.tags == "success" %}
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Success!</strong> {{ message }}
+        </div>
+            {% endif %}
+            {% endfor %}
+            </div>
+            <form action="update_con_action/{{ conf.id }}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                <div class="form-group">
+                    <label for="code">Code</label>
+                    <input type="text" class="form-control" id="code" name="code" value="{{conf.code}}" readonly>
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom" value="{{conf.nom}}">
+                </div>
+                </div>
+                </div>
+                <div class="form-group">
+                    <label for="topic">Sujet</label>
+                    <input type="text" class="form-control" id="topic" name="topic" value="{{conf.topic}}">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                <div class="form-group">
+                    <label for="dateDebut">Date Début</label>
+                    <input class="form-control" id="dateDebut" name="dateDebut" value="{{ conf.dateDebut }}">
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="dateFin">Date Fin</label>
+                    <input class="form-control" id="dateDebut" name="dateFin" value="{{ conf.dateFin }}">
+                </div>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                <div class="form-group">
+                    <label for="startTime">Heure Début</label>
+                    <input type="time" class="form-control" id="startTime" name="startTime" value="{{conf.startTime}}">
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="endTime">Heure Fin</label>
+                    <input type="time" class="form-control" id="endTime" name="endTime" value="{{conf.endTime}}">
+                </div>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                <div class="form-group">
+                    <label for="capacite">Capacité</label>
+                    <input type="number" class="form-control" id="capacite" name="capacite"value="{{conf.capacite}}" >
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="duree">Durée</label>
+                    <input type="number" class="form-control" id="duree" name="duree" value="{{conf.duree}}">
+                </div>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                <div class="form-group">
+                    <label for="pays">Pays</label>
+                    <input type="text" class="form-control" id="pays" name="pays" value="{{conf.pays}}">
+                </div>
+                </div>
+                <div class="col-md-6">
+                <div class="form-group">
+                    <label for="region">Région</label>
+                    <input type="text" class="form-control" id="region" name="region" value="{{conf.region}}">
+                </div>
+                </div>
+                </div>
+                <div class="form-group">
+                    <label for="region">Conférencier</label>
+                    <select name="conferencier" class="form-control selectpicker" >
+                        {% for c in con reversed %}
+                        {% if c.id == conf.conferencier_id %}
+                        <option value="{{ c.id }}" selected>{{c.nom}} {{c.prenom}}</option>
+                        {% else %}
+                        <option value="{{ c.id }}">{{c.nom}} {{c.prenom}}</option>
+                        {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="imageConf">Image de conférence</label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="imageConf" name="imageConf" value="{{conf.imageConf}}">
+                          <label class="custom-file-label" for="imageConf">Choisir un fichier</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="programme">Programme de conférence</label>
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="programme" name="programme" value="{{conf.programme}}">
+                          <label class="custom-file-label" for="programme">Choisir un fichier</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div> 
+                <button type="submit" class="btn " style="background-color: #6a2c70; border-color: #6a2c70; color: white; margin-left: 500px;">Modifier</button>
+            </form>
+        </div>
+    </section>
+    <script>
+     
+                const navBar = document.querySelector("nav")
+                const navToggle = document.querySelector(".navToggle")
+                navToggle.addEventListener('click',()=>{
+                navBar.classList.toggle('close')
+})
+
+        
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+
+<html>
+<head>
+    <title>Editer une conférence</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <!--NavBar start-->
+    {% include 'navBar.html' %}
+    <!-- CONTENT -->
+    <section class="dashboard">
+        <div class="top">
+            <ion-icon class="navToggle" name="menu-outline"></ion-icon>
+            
+            {% if user.is_authenticated %}
+                {{user.username}} 
+                {% endif %}
+            <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="container" style="position: relative; margin-top: 30px;">
+            <div class="overview" style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="title" style="display: flex; align-items: center;">
+                    <ion-icon name="calendar"></ion-icon>
+                    <span class="text" style="margin-left: 10px;">Editer un participant</span>
+                </div>
+            </div>
+            <form action="update_participant_action/{{ participant.id }}" method="POST" >
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="nom">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom" value="{{participant.nom}}">
+                </div>
+                <div class="form-group">
+                    <label for="prenom">Prénom</label>
+                    <input type="text" class="form-control" id="prenom" name="prenom" value="{{participant.prenom}}">
+                </div>
+                <div class="form-group">
+                    <label for="email">Adresse Email</label>
+                    <input type="email" class="form-control" id="email" name="email" value="{{participant.email}}">
+                </div>
+                <div class="form-group">
+                    <label for="telephone">Téléphone</label>
+                    <input type="text" class="form-control" id="telephone" name="telephone" value="{{participant.telephone}}">
+                </div>
+                <button type="submit" class="btn btn-primary">Modifier</button>
+            </form>
+        </div>
+    </section>
+    <script>
+     
+                const navBar = document.querySelector("nav")
+                const navToggle = document.querySelector(".navToggle")
+                navToggle.addEventListener('click',()=>{
+                navBar.classList.toggle('close')
+})
+
+        
+
+    </script>
+</body>
+</html>

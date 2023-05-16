@@ -1,0 +1,299 @@
+-- Create the Film table
+CREATE TABLE Film (
+  id NUMBER PRIMARY KEY,
+  name VARCHAR(255),
+  genre VARCHAR(255)
+);
+
+-- Create the Actor table
+CREATE TABLE Actor (
+  id NUMBER PRIMARY KEY,
+  actor_name VARCHAR(255),
+  age  number,
+  film_id NUMBER REFERENCES Film(id)
+);
+drop table Actor;
+
+INSERT INTO Film (id, name, genre) VALUES (1, 'The Shawshank Redemption', 'Drama');
+INSERT INTO Film (id, name, genre) VALUES (2, 'The Godfather', 'Crime');
+INSERT INTO Film (id, name, genre) VALUES (3, 'The Dark Knight', 'Action');
+
+INSERT INTO Actor (id, actor_name,age, film_id) VALUES (1001, 'Morgan Freeman',50, 1);
+INSERT INTO Actor (id, actor_name,age, film_id) VALUES (1002, 'Marlon Brando',40, 2);
+INSERT INTO Actor (id, actor_name,age, film_id) VALUES (1003, 'Heath Ledger',30, 3);
+select * from Actor;
+
+SET SERVEROUTPUT ON
+DECLARE
+v_actor NUMBER := &enter_actor_code; 
+v_titre Film.name%type;
+BEGIN
+  SELECT name INTO v_titre FROM Film WHERE id = ( SELECT film_id FROM Actor a WHERE a.id =v_actor );
+  DBMS_OUTPUT.PUT_LINE('L''acteur a joué dans le film : ' || v_titre);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Aucun film trouvé pour cet acteur.');
+    WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLCODE );
+    DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLERRM );
+    END;
+
+//EX2
+
+SET SERVEROUTPUT on;
+
+DECLARE
+
+ex EXCEPTION;
+BEGIN
+UPDATE Actor SET age = 57 WHERE id = 10;
+
+IF SQL%NOTFOUND THEN
+RAISE ex;
+ELSE
+COMMIT;
+DBMS_OUTPUT.PUT_LINE('Modification effectuée avec succes.');
+END IF;
+EXCEPTION
+WHEN ex THEN
+DBMS_OUTPUT.PUT_LINE('Aucune donnée trouvée');
+
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLCODE);
+END;
+
+--exercice 3
+CREATE TABLE fournisseur (
+   numfour NUMBER(10) PRIMARY KEY,
+   nomfour VARCHAR2(50),
+   adressefour VARCHAR2(100)
+);
+CREATE TABLE produit (
+   numprod NUMBER(10) PRIMARY KEY,
+   desprod VARCHAR2(50),
+   PUprod NUMBER(10,2),
+   qtestock NUMBER(10),
+   qtemin NUMBER(10),
+   qtemax NUMBER(10),
+   couleur VARCHAR2(20),
+   typeprod CHAR(1)
+);
+CREATE TABLE appro (
+   numprod NUMBER(10),
+   numfour NUMBER(10),
+   prixunit NUMBER(10,2),
+   typeprod CHAR(1),
+   PRIMARY KEY (numprod, numfour),
+   FOREIGN KEY (numprod) REFERENCES produit(numprod),
+   FOREIGN KEY (numfour) REFERENCES fournisseur(numfour))
+--insertion 
+INSERT INTO fournisseur (numfour, nomfour, adressefour)
+VALUES (1, 'Fournisseur 1', '1 rue de la Fourniture');
+
+INSERT INTO fournisseur (numfour, nomfour, adressefour)
+VALUES (2, 'Fournisseur 2', '2 avenue des Approvisionnements');
+
+INSERT INTO fournisseur (numfour, nomfour, adressefour)
+VALUES (3, 'Fournisseur 3', '3 boulevard des Fournitures');
+INSERT INTO produit (numprod, desprod, PUprod, qtestock, qtemin, qtemax, couleur, typeprod)
+VALUES (1, 'Produit 1', 10.50, 100, 20, 200, 'Rouge', 'A');
+
+INSERT INTO produit (numprod, desprod, PUprod, qtestock, qtemin, qtemax, couleur, typeprod)
+VALUES (2, 'Produit 2', 25.00, 50, 10, 100, 'Bleu', 'B');
+
+INSERT INTO produit (numprod, desprod, PUprod, qtestock, qtemin, qtemax, couleur, typeprod)
+VALUES (3, 'Produit 3', 5.99, 200, 30, 500, 'Vert', 'C');
+INSERT INTO appro (numprod, numfour, prixunit, typeprod)
+VALUES (1, 1, 11.50, 'A');
+
+INSERT INTO appro (numprod, numfour, prixunit, typeprod)
+VALUES (2, 2, 30.00, 'B');
+
+INSERT INTO appro (numprod, numfour, prixunit, typeprod)
+VALUES (3, 3, 7.50, 'C');
+--question 1
+set serveroutput on;
+DECLARE
+  v_nomfour fournisseur.nomfour%TYPE;
+  v_typeprod produit.typeprod%TYPE;
+BEGIN
+  FOR rec IN (SELECT f.nomfour, p.typeprod
+              FROM fournisseur f, produit p, appro a
+              WHERE f.numfour = a.numfour AND a.numprod = p.numprod)
+  LOOP
+    v_nomfour := rec.nomfour;
+    v_typeprod := rec.typeprod;
+
+    CASE v_typeprod
+      WHEN 'C' THEN
+        DBMS_OUTPUT.PUT_LINE(v_nomfour || ' fournit des produits bon marché');
+      WHEN 'B' THEN
+        DBMS_OUTPUT.PUT_LINE(v_nomfour || ' fournit des produits à la portée');
+      WHEN 'A' THEN
+        DBMS_OUTPUT.PUT_LINE(v_nomfour || ' fournit des produits de luxe');
+         WHEN 'D' THEN
+    DBMS_OUTPUT.PUT_LINE(v_nomfour || ' fournit des produits spéciaux');
+    END CASE;
+  END LOOP;
+END;
+--2 b
+set serveroutput on;
+declare
+ex exception;
+BEGIN
+  UPDATE Produit SET typeprod = 'D' WHERE numprod = 745;
+ 
+IF SQL%NOTFOUND THEN
+RAISE ex;
+ELSE
+COMMIT;
+DBMS_OUTPUT.PUT_LINE('Modification effectuée avec succes.');
+END IF;
+EXCEPTION
+WHEN ex THEN
+DBMS_OUTPUT.PUT_LINE('Aucune donnée trouvée');
+
+WHEN OTHERS THEN
+DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLCODE);
+END;
+--3
+set serveroutput on;
+DECLARE
+  v_couleur Produit.couleur%TYPE := '&couleur_produit';
+  v_designation Produit.desprod%TYPE;
+BEGIN
+  SELECT desprod INTO v_designation FROM Produit WHERE couleur = v_couleur;
+
+  DBMS_OUTPUT.PUT_LINE('Nom du produit: ' || v_designation);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Aucun produit de couleur  n''a été trouvé.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLCODE || ' - ' || SQLERRM);
+END;
+
+//***********************//
+CREATE TABLE Filmm (
+  codeF NUMBER PRIMARY KEY,
+  titre VARCHAR(255),
+  date_sortie DATE,
+  pays VARCHAR(255),
+  realisateur VARCHAR(255),
+  genre VARCHAR(255)
+);
+
+CREATE TABLE Acteur (
+  codeA NUMBER PRIMARY KEY,
+  nom VARCHAR(255),
+  nationalite VARCHAR(255),
+  age NUMBER
+);
+CREATE TABLE Jouer (
+  codeA NUMBER,
+  codeF NUMBER,
+  salaire NUMBER,
+  FOREIGN KEY (codeA) REFERENCES Acteur(codeA),
+  FOREIGN KEY (codeF) REFERENCES Filmm(codeF)
+);
+
+
+
+
+
+--exercie 1
+CREATE FUNCTION quiEsT (p_codeA Acteur.codeA%TYPE)
+RETURN Acteur.nom%TYPE
+as
+  v_nom Acteur.nom%TYPE;
+BEGIN
+  SELECT nom INTO v_nom
+  FROM Acteur
+  WHERE codeA = p_codeA;
+
+  RETURN v_nom;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Acteur non trouvé');
+    return NULL;
+END;
+
+set serveroutput on;
+DECLARE
+  v_nom Acteur.nom%TYPE;
+BEGIN
+  v_nom := quiEsT(1);
+END;
+--exercice 2
+--a
+CREATE OR REPLACE PROCEDURE mesFilms(p_codeA NUMBER)
+aS
+  v_titre Filmm.titre%TYPE;
+BEGIN
+  SELECT f.titre INTO v_titre
+  FROM Filmm f,Jouer j where f.codeF = j.codeF
+  and j.codeA = p_codeA;
+
+  DBMS_OUTPUT.PUT_LINE('Films dans lesquels l''acteur a joué:');
+  DBMS_OUTPUT.PUT_LINE(v_titre);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Aucun film trouvé pour cet acteur.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLCODE || ' - ' || SQLERRM);
+END;
+--b
+set SERVEROUTPUT ON;
+declare
+BEGIN
+  mesFilms(123);
+END;
+
+--exercice 3
+create or replace procedure maxMinSalaire
+as
+  v_max_salaire Acteur.codeA%TYPE;
+  v_min_salaire Acteur.codeA%TYPE;
+begin
+  select codeA into v_max_salaire
+  from Jouer
+  where salaire = (select max(salaire) from Jouer);
+
+  select codeA into v_min_salaire
+  from Jouer
+  where salaire = (select min(salaire) from Jouer);
+
+  DBMS_OUTPUT.PUT_LINE('acteur avec le salaire le plus élevé: ' || v_max_salaire);
+  DBMS_OUTPUT.PUT_LINE('acteur avec le salaire le plus bas: ' || v_min_salaire);
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Aucun acteur trouvé.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLCODE || ' - ' || SQLERRM);
+END;
+
+set serveroutput on;
+declare
+BEGIN
+  maxMinSalaire;
+ 
+END;
+
+
+--exercice 4
+
+create OR replace procedure majAge(p_codeA Acteur.codeA%TYPE)
+as
+  v_age Acteur.age%TYPE;
+begin
+  select age into v_age from Acteur where codeA = p_codeA;
+
+  update Acteur set age = v_age + 1 where codeA = p_codeA;
+ commit;
+EXCEPTION
+  WHEN NO_DATA_FOUND THEN
+    DBMS_OUTPUT.PUT_LINE('Acteur non trouvé.');
+  WHEN OTHERS THEN
+    DBMS_OUTPUT.PUT_LINE('Erreur : ' || SQLCODE || ' - ' || SQLERRM);
+END;
+--b
+set SERVEROUTPUT ON;

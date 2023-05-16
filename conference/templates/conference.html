@@ -1,0 +1,168 @@
+{% load static %}
+
+<html>
+<head>
+    <title>Liste des conférences</title>
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+</head>
+<body>
+    <!--NavBar start-->
+    {% include 'navBar.html' %}
+    <!-- CONTENT -->
+    <section class="dashboard">
+        <div class="top">
+            <ion-icon class="navToggle" name="menu-outline"></ion-icon>
+            <div class="searchBox">
+                <ion-icon name="search-outline"></ion-icon>
+                <input type="text" onkeyup="searchFunction()" id="searchInput" placeholder="Search">
+            </div>
+            {% if user.is_authenticated %}
+                {{user.username}} 
+                {% endif %}
+            <ion-icon name="person"></ion-icon>
+        </div>
+        <div class="container" style="position: relative; margin-top: 30px;">
+            <div class="overview" style="display: flex; align-items: center; justify-content: space-between;">
+                <div class="title" style="display: flex; align-items: center;">
+                    <ion-icon name="calendar"></ion-icon>
+                    <span class="text" style="margin-left: 10px;">Liste des conférences</span>
+                </div>
+                <div style="display:flex;align-items:center;">
+                    <a href="addConference/" class="btn btn-success rounded-circle" style="font-size:24px;width:50px;height:50px;display:flex;align-items:center;justify-content:center;">
+                        <ion-icon name="add-circle-outline"></ion-icon>
+                    </a>
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nom de conférence</th>
+                        <th scope="col">Sujet</th>
+                        <th scope="col">Date Début</th>
+                        <th scope="col">Pays</th>
+                        <th scope="col" style="position: relative;left: 60px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for conference in conferences %}
+                        <tr>
+                            <th scope="row">{{conference.id}}</th>
+                            <td>{{conference.nom}}</td>
+                            <td>{{conference.topic}}</td>
+                            <td>{{conference.dateDebut}}</td>
+                            <td>{{conference.pays}}</td>
+                            <td><a href="update_con/{{conference.id}}" class="btn btn-warning mb-2"><ion-icon name="create-sharp"></ion-icon></a></td>
+                            <td>
+                                <a href="del_con/{{ conference.id }}" class="btn btn-danger mb-2" onclick="event.preventDefault(); sweetAlertConfirm(this.href);">
+                                    <ion-icon name="trash-sharp"></ion-icon>
+                                </a>
+                            </td>
+                            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                            <script>
+                                function sweetAlertConfirm(url) {
+                                    Swal.fire({
+                                        title: 'Êtes-vous sûr de vouloir supprimer cette conférence ?',
+                                        text: "Vous ne pourrez pas revenir en arrière !",
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Oui, supprimez-la !'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = url;
+                                        }
+                                    });
+                                }
+                            </script>                            
+                            <td>
+                              <a href="details_conference/{{ conference.id }}" class="btn btn-primary mb-2">
+                                <ion-icon name="folder-sharp"></ion-icon>
+                              </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- pagination -->
+<div class="pagination">
+    <span class="step-links">
+        {% if conferences.has_previous %}
+            <a href="?page=1"><button class="btn btn-secondary">&laquo; </button></a>
+        {% endif %}
+
+        {% for num in conferences.paginator.page_range %}
+            {% if conferences.number == num %}
+                <span class="current-page">
+                    <button class="btn btn-outline-secondary">{{ num }}</button>
+                </span>
+            {% else %}
+                <a href="?page={{ num }}"><button class="btn btn-outline-secondary">{{ num }}</button></a>
+            {% endif %}
+        {% endfor %}
+
+        {% if conferences.has_next %}
+            <a href="?page={{ conferences.paginator.num_pages }}"><button class="btn btn-secondary"> &raquo;</button></a>
+        {% endif %}
+    </span>
+</div>
+
+        </div>
+    </section>
+    <script>
+        function searchFunction() {
+  // Get input value and convert to lowercase
+  var input = document.getElementById("searchInput");
+  var filter = input.value.toLowerCase();
+  
+  // Get table rows and loop through them
+  var rows = document.getElementsByTagName("tr");
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    
+    // Get columns in current row
+    var cols = row.getElementsByTagName("td");
+    var found = false;
+    
+    // Loop through columns in current row
+    for (var j = 0; j < cols.length; j++) {
+      var col = cols[j];
+      
+      // If current column contains filter, mark row as found and break out of loop
+      if (col.innerHTML.toLowerCase().indexOf(filter) > -1) {
+        found = true;
+        break;
+      }
+    }
+    
+    // Set row display based on whether it was found or not
+    row.style.display = found ? "" : "none";
+  }
+}
+
+            const navBar = document.querySelector("nav")
+const navToggle = document.querySelector(".navToggle")
+navToggle.addEventListener('click',()=>{
+    navBar.classList.toggle('close')
+})
+
+        
+
+    </script>
+    </script>
+    {% for message in messages %}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% if message.tags == 'success' %}
+    <script>
+    Swal.fire(
+    'Félicitations',
+    '{{message}}',
+    'success'
+    )
+    </script>
+    {% endif %}
+   {% endfor %}
+</body>
+</html>

@@ -1,0 +1,164 @@
+<html>
+    {% load static %}
+
+    <head>
+        <title> Ajouter un conférencier</title>
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    </head>
+
+    <body>
+        <!--NavBar start-->
+        {% include 'navBar.html' %}
+
+        <!-- CONTENT -->
+        <section class="dashboard">
+            <div class="top">
+                <ion-icon class="navToggle" name="menu-outline"></ion-icon>
+               
+                <ion-icon name="person"></ion-icon>
+            </div>
+
+            <div class="container">
+                <div class="title" style="display: flex; align-items: center;">
+                    <ion-icon name="add"></ion-icon>
+                    <span class="text" style="margin-left: 10px;">Ajouter une conférence</span>
+                </div>
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <form action="add_conference/" method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-6">
+                            <div class="form-group">
+                                <label for="code">Code</label>
+                                <input type="text" class="form-control" id="code" name="code">
+                            </div>
+                            </div>
+                            <div class="col-6">
+                            <div class="form-group">
+                                <label for="nom">Nom</label>
+                                <input type="text" class="form-control" id="nom" name="nom">
+                            </div>
+                            </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="topic">Sujet</label>
+                                <input type="text" class="form-control" id="topic" name="topic">
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                            <div class="form-group">
+                                <label for="dateDebut">Date Début</label>
+                                <input type="text" class="form-control" id="dateDebut" name="dateDebut">
+                            </div>
+                            </div>
+                            <div class="col-6">
+                            <div class="form-group">
+                                <label for="dateFin">Date Fin</label>
+                                <input type="text" class="form-control" id="dateFin" name="dateFin">
+                            </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                            <div class="form-group">
+                                <label for="startTime">Heure Début</label>
+                                <input type="time" class="form-control" id="startTime" name="startTime">
+                            </div>
+                            </div>
+                            <div class="col-6">
+                            <div class="form-group">
+                                <label for="endTime">Heure Fin</label>
+                                <input type="time" class="form-control" id="endTime" name="endTime" >
+                            </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                            <div class="form-group">
+                                <label for="capacite">Capacité</label>
+                                <input type="number" class="form-control" id="capacite" name="capacite" >
+                            </div>
+                            </div>
+                            <div class="col-6">
+                            <div class="form-group">
+                                <label for="duree">Durée</label>
+                                <input type="number" class="form-control" id="duree" name="duree" >
+                            </div>
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                            <div class="form-group">
+                                <label for="pays">Pays</label>
+                                <input type="text" class="form-control" id="pays" name="pays" >
+                            </div>
+                            </div>
+                            <div class="col-6">
+                            <div class="form-group">
+                                <label for="region">Région</label>
+                                <input type="text" class="form-control" id="region" name="region" >
+                            </div>
+                            </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="region">Conférencier</label>
+                                <select name="conferencier" class="form-control selectpicker">
+                                    <option>Select a conférencier</option>
+                                    {% for con in conferencier %}
+                                    <option value="{{ con.id }}">{{con.nom}} {{con.prenom}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label for="imageConf">Image de conférence</label>
+                                    <div class="custom-file">
+                                      <input type="file" class="custom-file-input" id="imageConf" name="imageConf">
+                                      <label class="custom-file-label" for="imageConf">Choisir un fichier</label>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                    <label for="programme">Programme de conférence</label>
+                                    <div class="custom-file">
+                                      <input type="file" class="custom-file-input" id="programme" name="programme">
+                                      <label class="custom-file-label" for="programme">Choisir un fichier</label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>                              
+                            <button type="submit" class="btn " style="background-color: #6a2c70; border-color: #6a2c70; color: white; margin-left: 300px;">Ajouter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script>
+            const navBar = document.querySelector("nav")
+const navToggle = document.querySelector(".navToggle")
+navToggle.addEventListener('click',()=>{
+    navBar.classList.toggle('close')
+})
+
+        </script>
+         {% for message in messages %}
+         <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+         {% if message.tags == 'error' %}
+         <script>
+           Swal.fire(
+           'Echéc',
+           '{{message}}',
+           'error'
+           )
+           </script>
+         {% endif %}
+        {% endfor %}
+    </body>
+</html>

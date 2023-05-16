@@ -1,0 +1,21 @@
+-- Create the Film table
+CREATE TABLE Film (
+  id NUMBER PRIMARY KEY,
+  name VARCHAR(255),
+  genre VARCHAR(255)
+);
+
+-- Create the Actor table
+CREATE TABLE Actor (
+  id NUMBER PRIMARY KEY,
+  actor_name VARCHAR(255),
+  film_id NUMBER REFERENCES Film(id)
+);
+
+INSERT INTO Film (id, name, genre) VALUES (1, 'The Shawshank Redemption', 'Drama');
+INSERT INTO Film (id, name, genre) VALUES (2, 'The Godfather', 'Crime');
+INSERT INTO Film (id, name, genre) VALUES (3, 'The Dark Knight', 'Action');
+
+INSERT INTO Actor (id, actor_name, film_id) VALUES (1001, 'Morgan Freeman', 1);
+INSERT INTO Actor (id, actor_name, film_id) VALUES (1002, 'Marlon Brando', 2);
+INSERT INTO Actor (id, actor_name, film_id) VALUES (1003, 'Heath Ledger', 3);

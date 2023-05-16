@@ -1,0 +1,61 @@
+<html>
+    {% load static %}
+
+    <head>
+        <title> Tableau de bord</title>
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'image/eventspark1.png' %}">
+    </head>
+    <body>
+        <!--NavBar start-->
+        {% include 'navBar.html' %}
+		<!-- CONTENT -->
+        <section class="dashboard">
+            <div class="top">
+                <ion-icon class="navToggle" name="menu-outline"></ion-icon>
+                <b><i>
+                Bienvenue encore   
+                {% if user.is_authenticated %}
+                {{user.username}} !
+                {% endif %}
+                </i></b>
+                <ion-icon name="person"></ion-icon>
+            </div>
+            
+            <div class="container">
+                <div class="overview">
+                    <div class="title">
+                        <ion-icon name="speedometer"></ion-icon>
+                        <span class="text">Tableau de bord</span>
+                    </div>
+                    <div class="boxes">
+                        <div class="box box1">
+                            <ion-icon name="eye-outline"></ion-icon>
+                            <span class="text">Total des conférences</span>
+                            <span class="number">{{total_conferences}}</span>
+                        </div>
+                        <div class="box box2">
+                            <ion-icon name="chatbubbles-outline"></ion-icon>
+                            <span class="text">Total des conférenciers</span>
+                            <span class="number">{{total_conferenciers}}</span>
+                        </div>
+                        <div class="box box3">
+                            <ion-icon name="arrow-redo-outline"></ion-icon>
+                            <span class="text">Total des participants</span>
+                            <span class="number">{{total_participants}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+        <script>
+            const navBar = document.querySelector("nav")
+const navToggle = document.querySelector(".navToggle")
+navToggle.addEventListener('click',()=>{
+    navBar.classList.toggle('close')
+})
+
+        </script>
+    </body>
+</html>
